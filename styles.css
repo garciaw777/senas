@@ -1,0 +1,126 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+    color: #333;
+}
+
+header {
+    background-color: #fff;
+    border-bottom: 2px solid #ccc;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.logo img {
+    max-width: 200px;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0;
+    display: flex;
+    justify-content: center;
+}
+
+nav ul li {
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: #333;
+    text-decoration: none;
+    font-size: 1.2em;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+nav ul li a:hover {
+    color: #036cff;
+}
+
+main {
+    padding: 50px 20px;
+}
+
+section {
+    margin-bottom: 50px;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border-radius: 8px;
+    font-style: normal;
+}
+
+section h1, section h2 {
+    color: #036cff;
+    font-size: 2em;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #036cff;
+    padding-bottom: 10px;
+    font-style: normal;
+}
+
+section p {
+    font-size: 1.2em;
+    line-height: 1.6;
+}
+
+.image-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    text-align: center;
+}
+
+.image-container img {
+    width: 150px;
+    height: auto;
+    border-radius: 8px;
+    text-align: center;
+}
+
+footer {
+    background-color: #fff;
+    border-top: 2px solid #ccc;
+    padding: 20px 0;
+    text-align: center;
+}
+
+footer p {
+    margin: 0;
+    color: #333;
+    font-size: 0.9em;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form label {
+    margin-top: 10px;
+    color: #333;
+}
+
+form input, form textarea, form button {
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #333;
+}
+
+form button {
+    background-color: #036cff;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+form button:hover {
+    background-color: #024acb;
+}

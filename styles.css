@@ -73,6 +73,9 @@ section p {
     justify-content: center;
     gap: 10px;
     text-align: center;
+    width: 100px; /* Defina o tamanho desejado */
+    max-width: 100%;
+    height: auto;
 }
 
 .image-container img {
@@ -80,6 +83,9 @@ section p {
     height: auto;
     border-radius: 8px;
     text-align: center;
+    width: 100px; /* Defina o tamanho desejado */
+    max-width: 100%;
+    height: auto;
 }
 
 footer {

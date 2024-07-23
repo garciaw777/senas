@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Invaders Bonitinho</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+            font-family: Arial, sans-serif;
+            color: #fff;
+        }
+        canvas {
+            display: block;
+        }
+        #difficultyMenu, #restartButton {
+            position: absolute;
+            top: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #difficultyMenu {
+            left: 10px;
+            background-color: #28a745;
+            display: none;
+        }
+        #difficultyMenu button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        #difficultyMenu button:hover {
+            background-color: #0056b3;
+        }
+        #restartButton {
+            right: 10px;
+            background-color: #007bff;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <div id="difficultyMenu">
+        <button data-difficulty="normal">Normal</button>
+        <button data-difficulty="difficult">Difícil</button>
+        <button data-difficulty="insane">Insano</button>
+        <button data-difficulty="professional">Profissional</button>
+    </div>
+    <button id="restartButton">Reiniciar Jogo</button>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const restartButton = document.getElementById('restartButton');
+        const difficultyMenu = document.getElementById('difficultyMenu');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let playerSize = 50;
+        let playerSpeed = 5;
+        let laserWidth = 5;
+        let laserHeight = 10;
+        let laserSpeed = 7;
+        let enemyWidth = 40;
+        let enemyHeight = 20;
+        let enemySpeed = 2;
+        const initialAmmo = 10;
+        const ammoIncreaseOnHit = 2;
+
+        let player, lasers, enemies, enemyDirection, keys, ammo, gameOver, victory, difficulty;
+
+        function resetGame() {
+            player = {
+                x: canvas.width / 2 - playerSize / 2,
+                y: canvas.height - playerSize - 10,
+                size: playerSize,
+                color: 'green'
+            };
+
+            lasers = [];
+            enemies = [];
+            enemyDirection = 1;
+            keys = {};
+            ammo = initialAmmo;
+            gameOver = false;
+            victory = false;
+
+            createEnemies();
+            restartButton.style.display = 'none';
+            difficultyMenu.style.display = 'none';
+        }
+
+        function createEnemies() {
+            enemies = [];
+            let rows, cols;
+            switch (difficulty) {
+                case 'normal':
+                    rows = 3;
+                    cols = 8;
+                    break;
+                case 'difficult':
+                    rows = 4;
+                    cols = 10;
+                    break;
+                case 'insane':
+                    rows = 5;
+                    cols = 12;
+                    break;
+                case 'professional':
+                    rows = 6;
+                    cols = 14;
+                    break;
+            }
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    enemies.push({
+                        x: col * (enemyWidth + 10) + 50,
+                        y: row * (enemyHeight + 10) + 50,
+                        width: enemyWidth,
+                        height: enemyHeight,
+                        color: 'red'
+                    });
+                }
+            }
+        }
+
+        function drawPlayer() {
+            ctx.fillStyle = player.color;
+            ctx.beginPath();
+            ctx.moveTo(player.x + player.size / 2, player.y); // Topo do triângulo
+            ctx.lineTo(player.x, player.y + player.size);     // Base esquerda
+            ctx.lineTo(player.x + player.size, player.y + player.size); // Base direita
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        function drawEnemies() {
+            enemies.forEach(enemy => {
+                ctx.fillStyle = enemy.color;
+                ctx.beginPath();
+                ctx.rect(enemy.x, enemy.y, enemy.width, enemy.height);
+                ctx.fill();
+
+                // Adicionar uma expressão "brava"
+                ctx.fillStyle = 'black';
+                ctx.beginPath();
+                ctx.arc(enemy.x + enemy.width / 4, enemy.y + enemy.height / 3, 3, 0, Math.PI * 2); // Olho esquerdo
+                ctx.arc(enemy.x + 3 * enemy.width / 4, enemy.y + enemy.height / 3, 3, 0, Math.PI * 2); // Olho direito
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.moveTo(enemy.x + 3 * enemy.width / 8, enemy.y + 2 * enemy.height / 3); // Início da boca
+                ctx.lineTo(enemy.x + 5 * enemy.width / 8, enemy.y + 2 * enemy.height / 3); // Fim da boca
+                ctx.strokeStyle = 'black';
+                ctx.stroke();
+            });
+        }
+
+        function drawLasers() {
+            ctx.fillStyle = 'white';
+            lasers.forEach(laser => {
+                ctx.fillRect(laser.x, laser.y, laser.width, laser.height);
+            });
+        }
+
+        function drawAmmo() {
+            ctx.fillStyle = 'white';
+            ctx.font = '20px Arial';
+            ctx.fillText(Munição: ${ammo}, 10, 30);
+        }
+
+        function drawGameOver() {
+            ctx.fillStyle = 'white';
+            ctx.font = '50px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2);
+            ctx.font = '30px Arial';
+            ctx.fillText('Pressione F5 para reiniciar', canvas.width / 2, canvas.height / 2 + 40);
+        }
+
+        function drawVictory() {
+            ctx.fillStyle = 'white';
+            ctx.font = '50px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('PARABÉNS!', canvas.width / 2, canvas.height / 2 - 30);
+            ctx.font = '30px Arial';
+            ctx.fillText('Você terminou o jogo!', canvas.width / 2, canvas.height / 2);
+            ctx.fillText('Obrigado por jogar!', canvas.width / 2, canvas.height / 2 + 40);
+        }
+
+        function moveLasers() {
+            lasers = lasers.filter(laser => {
+                laser.y -= laserSpeed;
+                return laser.y > 0;
+            });
+        }
+
+        function detectCollision() {
+            lasers = lasers.filter(laser => {
+                const hit = enemies.some((enemy, index) => {
+                    if (laser.x < enemy.x + enemy.width &&
+                        laser.x + laser.width > enemy.x &&
+                        laser.y < enemy.y + enemy.height &&
+                        laser.y + laser.height > enemy.y) {
+                        enemies.splice(index, 1);
+                        ammo += ammoIncreaseOnHit;  // Aumenta a munição ao acertar um inimigo
+                        return true;
+                    }
+                    return false;
+                });
+                return !hit;
+            });
+        }
+
+        function moveEnemies() {
+            let moveDown = false;
+            enemies.forEach(enemy => {
+                enemy.x += enemySpeed * enemyDirection;
+                if (enemy.x <= 0 || enemy.x + enemy.width >= canvas.width) {
+                    moveDown = true;
+                }
+            });
+            if (moveDown) {
+                enemyDirection *= -1;
+                enemies.forEach(enemy => {
+                    enemy.y += 10;
+                });
+            }
+        }
+
+        function checkVictory() {
+            if (enemies.length === 0) {
+                victory = true;
+                gameOver = true;  // Para de atualizar o jogo
+            }
+        }
+
+        function update() {
+            if (gameOver) return;
+
+            moveLasers();
+            detectCollision();
+            moveEnemies();
+            checkVictory();
+            
+            // Movimentação do jogador
+            if (keys['ArrowLeft']) {
+                player.x -= playerSpeed;
+            }
+            if (keys['ArrowRight']) {
+                player.x += playerSpeed;
+            }
+
+            player.x = Math.max(0, Math.min(canvas.width - player.size, player.x));
+
+            // Verifica se a munição acabou
+            if (ammo <= 0) {
+                gameOver = true;
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawPlayer();
+            drawEnemies();
+            drawLasers();
+            drawAmmo();
+
+            if (gameOver) {
+                if (victory) {
+                    drawVictory();
+                } else {
+                    drawGameOver();
+                }
+            }
+        }
+
+        function gameLoop() {
+            update();
+            draw();
+            requestAnimationFrame(gameLoop);
+        }
+
+        function selectDifficulty(selectedDifficulty) {
+            difficulty = selectedDifficulty;
+            switch (difficulty) {
+                case 'normal':
+                    playerSpeed = 5;
+                    laserSpeed = 7;
+                    enemySpeed = 2;
+                    break;
+                case 'difficult':
+                    playerSpeed = 4;
+                    laserSpeed = 6;
+                    enemySpeed = 3;
+                    break;
+                case 'insane':
+                    playerSpeed = 3;
+                    laserSpeed = 5;
+                    enemySpeed = 4;
+                    break;
+                case 'professional':
+                    playerSpeed = 2;
+                    laserSpeed = 4;
+                    enemySpeed = 5;
+                    break;
+            }
+            resetGame();
+            gameLoop();
+        }
+
+        document.addEventListener('keydown', e => {
+            keys[e.key] = true;
+            if (e.key === ' ') {
+                if (ammo > 0 && !gameOver) {
+                    lasers.push({
+                        x: player.x + player.size / 2 - laserWidth / 2,
+                        y: player.y,
+                        width: laserWidth,
+                        height: laserHeight
+                    });
+                    ammo--;
+                }
+            }
+        });
+
+        document.addEventListener('keyup', e => {
+            keys[e.key] = false;
+        });
+
+        document.getElementById('difficultyMenu').addEventListener('click', e => {
+            if (e.target.tagName === 'BUTTON') {
+                selectDifficulty(e.target.dataset.difficulty);
+            }
+        });
+
+        restartButton.addEventListener('click', () => {
+            resetGame();
+            gameLoop();
+        });
+
+        // Mostrar o menu de dificuldade quando a página carregar
+        window.onload = () => {
+            difficultyMenu.style.display = 'block';
+        };
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tetris</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            position: relative;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        .game {
+            display: grid;
+            grid-template-columns: repeat(10, 30px);
+            grid-template-rows: repeat(20, 30px);
+            gap: 1px;
+            background-color: #333;
+            padding: 5px;
+        }
+        .cell {
+            width: 30px;
+            height: 30px;
+            background-color: #000;
+        }
+        .filled {
+            background-color: #ccc;
+        }
+        .cyan { background-color: cyan; }
+        .blue { background-color: blue; }
+        .orange { background-color: orange; }
+        .yellow { background-color: yellow; }
+        .green { background-color: green; }
+        .purple { background-color: purple; }
+        .red { background-color: red; }
+        .start-button {
+            background-color: #00f;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .start-button:hover {
+            background-color: #00d;
+        }
+        .back-button {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background-color: #00f;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .back-button:hover {
+            background-color: #00d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="game" id="game"></div>
+        <button id="startButton" class="start-button">Start</button>
+    </div>
+    <button class="back-button" onclick="window.location.href='jogo.html'">Voltar</button>
+    <script>
+        const gameElement = document.getElementById('game');
+        const startButton = document.getElementById('startButton');
+        const rows = 20;
+        const cols = 10;
+        let grid = Array.from({ length: rows }, () => Array(cols).fill(0));
+        let currentTetromino;
+        let interval;
+
+        function drawGrid() {
+            gameElement.innerHTML = '';
+            grid.forEach(row => {
+                row.forEach(cell => {
+                    const cellElement = document.createElement('div');
+                    cellElement.classList.add('cell');
+                    if (cell) {
+                        cellElement.classList.add('filled', cell);
+                    }
+                    gameElement.appendChild(cellElement);
+                });
+            });
+        }
+
+        const tetrominoes = [
+            { shape: [[1, 1, 1, 1]], color: 'cyan' }, // I
+            { shape: [[1, 1], [1, 1]], color: 'yellow' }, // O
+            { shape: [[0, 1, 0], [1, 1, 1]], color: 'purple' }, // T
+            { shape: [[1, 0, 0], [1, 1, 1]], color: 'blue' }, // J
+            { shape: [[0, 0, 1], [1, 1, 1]], color: 'orange' }, // L
+            { shape: [[0, 1, 1], [1, 1, 0]], color: 'green' }, // S
+            { shape: [[1, 1, 0], [0, 1, 1]], color: 'red' } // Z
+        ];
+
+        function getRandomTetromino() {
+            const randomIndex = Math.floor(Math.random() * tetrominoes.length);
+            const tetromino = tetrominoes[randomIndex];
+            return {
+                shape: tetromino.shape,
+                color: tetromino.color,
+                row: 0,
+                col: Math.floor(cols / 2) - Math.ceil(tetromino.shape[0].length / 2)
+            };
+        }
+
+        function drawTetromino() {
+            currentTetromino.shape.forEach((row, y) => {
+                row.forEach((cell, x) => {
+                    if (cell) {
+                        grid[currentTetromino.row + y][currentTetromino.col + x] = currentTetromino.color;
+                    }
+                });
+            });
+            drawGrid();
+        }
+
+        function undrawTetromino() {
+            currentTetromino.shape.forEach((row, y) => {
+                row.forEach((cell, x) => {
+                    if (cell) {
+                        grid[currentTetromino.row + y][currentTetromino.col + x] = 0;
+                    }
+                });
+            });
+        }
+
+        function rotateTetromino() {
+            const shape = currentTetromino.shape;
+            const newShape = shape[0].map((_, i) => shape.map(row => row[i])).reverse();
+            undrawTetromino();
+            currentTetromino.shape = newShape;
+            if (checkCollision()) {
+                currentTetromino.shape = shape; // revert rotation if there's a collision
+            }
+            drawTetromino();
+        }
+
+        function moveTetromino(dir) {
+            undrawTetromino();
+            currentTetromino.col += dir;
+            if (checkCollision()) {
+                currentTetromino.col -= dir;
+            }
+            drawTetromino();
+        }
+
+        function moveTetrominoDown() {
+            undrawTetromino();
+            currentTetromino.row++;
+            if (checkCollision()) {
+                currentTetromino.row--;
+                drawTetromino();
+                fixTetromino();
+                currentTetromino = getRandomTetromino();
+                if (checkCollision()) {
+                    clearInterval(interval);
+                    alert('Game Over');
+                    return;
+                }
+            }
+            drawTetromino();
+        }
+
+        function checkCollision() {
+            return currentTetromino.shape.some((row, y) => {
+                return row.some((cell, x) => {
+                    if (cell) {
+                        const newRow = currentTetromino.row + y;
+                        const newCol = currentTetromino.col + x;
+                        return (
+                            newRow >= rows ||
+                            newCol < 0 ||
+                            newCol >= cols ||
+                            grid[newRow][newCol]
+                        );
+                    }
+                    return false;
+                });
+            });
+        }
+
+        function fixTetromino() {
+            currentTetromino.shape.forEach((row, y) => {
+                row.forEach((cell, x) => {
+                    if (cell) {
+                        grid[currentTetromino.row + y][currentTetromino.col + x] = currentTetromino.color;
+                    }
+                });
+            });
+            checkFullRows();
+        }
+
+        function checkFullRows() {
+            grid = grid.filter(row => row.some(cell => !cell));
+            while (grid.length < rows) {
+                grid.unshift(Array(cols).fill(0));
+            }
+        }
+
+        function startGame() {
+            grid = Array.from({ length: rows }, () => Array(cols).fill(0));
+            currentTetromino = getRandomTetromino();
+            drawGrid();
+            drawTetromino();
+            if (interval) {
+                clearInterval(interval);
+            }
+            interval = setInterval(moveTetrominoDown, 1000);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                moveTetromino(-1);
+            } else if (e.key === 'ArrowRight') {
+                moveTetromino(1);
+            } else if (e.key === 'ArrowDown') {
+                moveTetrominoDown();
+            } else if (e.key === 'ArrowUp') {
+                rotateTetromino();
+            }
+        });
+
+        startButton.addEventListener('click', startGame);
+    </script>
+</body>
+</html>

@@ -28,7 +28,6 @@
         </section>
         <div id="image-container">
             <img id="img1" src="1.png" alt="Imagem 1">
-            <img id="img2" src="2.png" alt="Imagem 2">
             <img id="img-rr" src="rr.png" alt="Imagem RR">
         </div>
     </main>
@@ -39,18 +38,15 @@
         function updateImages() {
             const width = window.innerWidth;
             const img1 = document.getElementById('img1');
-            const img2 = document.getElementById('img2');
             const imgRR = document.getElementById('img-rr');
 
             if (width <= 768) {
                 // Em dispositivos móveis, mostra rr.png e esconde 1.png e 2.png
                 img1.style.display = 'none';
-                img2.style.display = 'none';
                 imgRR.style.display = 'block';
             } else {
                 // Em telas maiores, mostra 1.png e 2.png e esconde rr.png
                 img1.style.display = 'block';
-                img2.style.display = 'block';
                 imgRR.style.display = 'none';
             }
         }

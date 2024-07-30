@@ -172,7 +172,7 @@ form button:hover {
     }
 
     .image-container img {
-        max-width: 45%; /* Ajusta a largura máxima para 2 imagens lado a lado em telas pequenas */
+        max-width: 100%; /* Ajusta a largura máxima para a imagem ocupar 100% em telas pequenas */
     }
 }
 
@@ -181,3 +181,4 @@ form button:hover {
         max-width: 45%; /* Ajusta a largura máxima para 2 imagens lado a lado em telas maiores */
     }
 }
+s

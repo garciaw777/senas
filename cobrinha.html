@@ -1,176 +1,156 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
     <link rel="shortcut icon" href="favicon.jogodacobra.ico" type="image/x-icon">
-    <title>Jogo da Cobrinha</title>
+    <title>Jogo Snake</title>
     <style>
         body {
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #000; /* Fundo preto da página */
+            background-color: #000;
             margin: 0;
-            color: #fff; /* Cor do texto */
         }
         canvas {
-            background-color: #000; /* Fundo preto do canvas */
-            border: none; /* Remove a borda */
+            border: 1px solid #fff;
         }
-        button {
+        #gameOverScreen {
+            position: absolute;
+            color: white;
+            text-align: center;
+            display: none;
+        }
+        #restartButton {
             margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 16px;
+            padding: 10px;
+            font-size: 18px;
             cursor: pointer;
-            background-color: #333; /* Cor de fundo do botão */
-            color: #fff; /* Cor do texto do botão */
-            border: none; /* Remove a borda do botão */
-        }
-        button:hover {
-            background-color: #555; /* Cor de fundo do botão ao passar o mouse */
         }
     </style>
 </head>
 <body>
-    <canvas id="gameCanvas" width="400" height="400"></canvas>
-    <button id="startButton">Start</button>
+    <canvas id="snakeGame" width="400" height="400"></canvas>
+    <div id="gameOverScreen">
+        <div>Game Over</div>
+        <button id="restartButton">Reiniciar Jogo</button>
+    </div>
     <script>
-        const canvas = document.getElementById('gameCanvas');
+        const canvas = document.getElementById('snakeGame');
         const ctx = canvas.getContext('2d');
-        const gridSize = 20;
-        const tileCount = canvas.width / gridSize;
+        const grid = 20; // Tamanho dos blocos
+        let snake = [{x: 160, y: 160}];
+        let food = {x: 0, y: 0};
+        let dx = grid; // Velocidade inicial do movimento (direita)
+        let dy = 0;
+        let changingDirection = false;
+        let score = 0;
+        let gameOver = false;
 
-        let snake;
-        let apple;
-        let dx;
-        let dy;
-        let score;
-        let gameInterval;
-
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawApple();
-            drawSnake();
-            moveSnake();
-            checkCollision();
-            drawBorder(); // Adiciona a linha verde ao redor do canvas
-        }
-
-        function drawApple() {
-            ctx.fillStyle = '#FF0000'; // Maçã vermelha
-            ctx.fillRect(apple.x * gridSize, apple.y * gridSize, gridSize, gridSize);
+        function randomFoodPosition() {
+            food.x = Math.floor(Math.random() * (canvas.width / grid)) * grid;
+            food.y = Math.floor(Math.random() * (canvas.height / grid)) * grid;
         }
 
         function drawSnake() {
-            for (let i = 0; i < snake.length; i++) {
-                let segment = snake[i];
-                ctx.fillStyle = i === 0 ? '#00FF00' : '#006400'; // Verde claro para a cabeça, verde escuro para o corpo
-                ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize, gridSize);
-
-                // Adiciona olhos à cabeça da cobrinha
-                if (i === 0) { // Somente na cabeça
-                    ctx.fillStyle = '#FFFFFF'; // Olhos brancos
-                    ctx.beginPath();
-                    ctx.arc(segment.x * gridSize + gridSize / 4, segment.y * gridSize + gridSize / 4, gridSize / 6, 0, Math.PI * 2);
-                    ctx.fill();
-                    
-                    ctx.beginPath();
-                    ctx.arc(segment.x * gridSize + 3 * gridSize / 4, segment.y * gridSize + gridSize / 4, gridSize / 6, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-            }
+            ctx.fillStyle = 'lime';
+            snake.forEach(segment => {
+                ctx.fillRect(segment.x, segment.y, grid, grid);
+            });
         }
 
-        function drawBorder() {
-            ctx.strokeStyle = '#00FF00'; // Cor da borda verde
-            ctx.lineWidth = 2; // Espessura da linha
-            ctx.strokeRect(0, 0, canvas.width, canvas.height); // Desenha o retângulo ao redor do canvas
+        function drawFood() {
+            ctx.fillStyle = 'red';
+            ctx.fillRect(food.x, food.y, grid, grid);
         }
 
         function moveSnake() {
-            let head = {x: snake[0].x + dx / gridSize, y: snake[0].y + dy / gridSize};
+            const head = {x: snake[0].x + dx, y: snake[0].y + dy};
             snake.unshift(head);
-            if (head.x === apple.x && head.y === apple.y) {
+
+            if (head.x === food.x && head.y === food.y) {
                 score++;
-                apple = {x: Math.floor(Math.random() * tileCount), y: Math.floor(Math.random() * tileCount)};
-                // Adiciona um novo segmento verde escuro no final da cobrinha
-                // Remove o segmento da cauda da cobrinha, garantindo que o comprimento aumente apenas em um bloco
-                snake.push({x: snake[snake.length - 1].x, y: snake[snake.length - 1].y});
+                randomFoodPosition();
             } else {
                 snake.pop();
             }
         }
 
         function checkCollision() {
-            let head = snake[0];
-            if (head.x < 0 || head.x >= tileCount || head.y < 0 || head.y >= tileCount) {
-                clearInterval(gameInterval);
-                alert('Game Over! Pontuação: ' + score);
-                resetGame();
+            const head = snake[0];
+            if (head.x < 0 || head.x >= canvas.width || head.y < 0 || head.y >= canvas.height) {
+                gameOver = true;
             }
             for (let i = 1; i < snake.length; i++) {
-                if (snake[i].x === head.x && snake[i].y === head.y) {
-                    clearInterval(gameInterval);
-                    alert('Game Over! Pontuação: ' + score);
-                    resetGame();
+                if (head.x === snake[i].x && head.y === snake[i].y) {
+                    gameOver = true;
                 }
             }
         }
 
+        function drawScore() {
+            ctx.fillStyle = 'white';
+            ctx.font = '20px Arial';
+            ctx.fillText(`Score: ${score}`, 10, 20);
+        }
+
+        function gameLoop() {
+            if (gameOver) {
+                const gameOverScreen = document.getElementById('gameOverScreen');
+                gameOverScreen.style.display = 'block';
+                return;
+            }
+
+            changingDirection = false;
+            moveSnake();
+            checkCollision();
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawSnake();
+            drawFood();
+            drawScore();
+        }
+
         function changeDirection(event) {
-            switch (event.key) {
-                case 'ArrowUp':
-                    if (dy === 0) {
-                        dx = 0;
-                        dy = -gridSize;
-                    }
-                    break;
-                case 'ArrowDown':
-                    if (dy === 0) {
-                        dx = 0;
-                        dy = gridSize;
-                    }
-                    break;
-                case 'ArrowLeft':
-                    if (dx === 0) {
-                        dx = -gridSize;
-                        dy = 0;
-                    }
-                    break;
-                case 'ArrowRight':
-                    if (dx === 0) {
-                        dx = gridSize;
-                        dy = 0;
-                    }
-                    break;
+            if (changingDirection) return;
+            changingDirection = true;
+            const key = event.code;
+
+            if (key === 'ArrowUp' && dy === 0) {
+                dx = 0;
+                dy = -grid;
+            } else if (key === 'ArrowDown' && dy === 0) {
+                dx = 0;
+                dy = grid;
+            } else if (key === 'ArrowLeft' && dx === 0) {
+                dx = -grid;
+                dy = 0;
+            } else if (key === 'ArrowRight' && dx === 0) {
+                dx = grid;
+                dy = 0;
             }
         }
 
-        function startGame() {
-            resetGame();
-            if (gameInterval) {
-                clearInterval(gameInterval);
-            }
-            gameInterval = setInterval(draw, 150); // Velocidade da cobrinha (ajustada para diminuir a velocidade)
-        }
-
-        function resetGame() {
-            snake = [{x: 10, y: 10}];
-            apple = {x: 5, y: 5};
-            dx = gridSize;
+        function restartGame() {
+            snake = [{x: 160, y: 160}];
+            food = {x: 0, y: 0};
+            dx = grid;
             dy = 0;
+            changingDirection = false;
             score = 0;
-            drawBorder(); // Garante que a borda verde seja desenhada na inicialização
+            gameOver = false;
+            randomFoodPosition();
+            const gameOverScreen = document.getElementById('gameOverScreen');
+            gameOverScreen.style.display = 'none';
         }
 
-        document.getElementById('startButton').addEventListener('click', startGame);
-        document.addEventListener('keydown', changeDirection);
-        
-        // Desenha a borda verde na inicialização do canvas
-        drawBorder();
+        window.addEventListener('keydown', changeDirection);
+        document.getElementById('restartButton').addEventListener('click', restartGame);
+
+        randomFoodPosition();
+        setInterval(gameLoop, 100); // Atualiza o jogo a cada 100ms
     </script>
 </body>
 </html>

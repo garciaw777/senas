@@ -25,9 +25,9 @@ nav ul {
     padding: 0;
     margin: 10px 0 0;
     display: flex;
-    flex-direction: row; /* Muda a direção da lista para linha */
+    flex-direction: row; /* Direção da lista para linha */
     justify-content: center; /* Centraliza os itens */
-    flex-wrap: wrap; /* Permite quebrar linha em telas pequenas */
+    flex-wrap: wrap; /* Permite quebrar linha se necessário */
 }
 
 nav ul li {
@@ -161,13 +161,18 @@ form button:hover {
 /* Media Queries para ajuste responsivo */
 @media (max-width: 768px) {
     nav ul {
-        flex-direction: column; /* Muda a direção da lista para coluna em telas pequenas */
-        align-items: center; /* Centraliza os itens */
+        flex-direction: row; /* Mantém a direção da lista como linha em telas pequenas */
+        flex-wrap: wrap; /* Permite quebrar linha se necessário */
+        justify-content: center; /* Centraliza os itens */
     }
 
     .image-container {
-        flex-direction: column; /* Muda a direção das imagens para coluna em telas pequenas */
-        align-items: center; /* Centraliza as imagens */
+        flex-direction: row; /* Mantém a direção das imagens como linha em telas pequenas */
+        justify-content: center; /* Centraliza as imagens */
+    }
+
+    .image-container img {
+        max-width: 45%; /* Ajusta a largura máxima para 2 imagens lado a lado em telas pequenas */
     }
 }
 

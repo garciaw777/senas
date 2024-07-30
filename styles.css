@@ -1,181 +1,112 @@
-/* Reset básico e estilos gerais */
-body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #fff;
-    color: #333;
-}
+        /* Reset básico e estilos gerais */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+            color: #333;
+        }
 
-header {
-    background-color: #fff;
-    border-bottom: 2px solid #ccc;
-    padding: 20px 0;
-    text-align: center;
-}
+        header {
+            background-color: #fff;
+            border-bottom: 2px solid #ccc;
+            padding: 20px 0;
+            text-align: center;
+        }
 
-.logo img {
-    max-width: 100%;
-    height: auto;
-    max-width: 200px; /* Limite máximo do tamanho do logo */
-}
+        .logo img {
+            max-width: 100%;
+            height: auto;
+            max-width: 200px; /* Limite máximo do tamanho do logo */
+        }
 
-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 10px 0 0;
-    display: flex;
-    flex-direction: row; /* Direção da lista para linha */
-    justify-content: center; /* Centraliza os itens */
-    flex-wrap: wrap; /* Permite quebrar linha se necessário */
-}
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0 0;
+            display: flex;
+            flex-direction: row; /* Direção da lista para linha */
+            justify-content: center; /* Centraliza os itens */
+            flex-wrap: wrap; /* Permite quebrar linha se necessário */
+        }
 
-nav ul li {
-    margin: 5px 15px; /* Ajusta o espaçamento entre itens */
-}
+        nav ul li {
+            margin: 5px 15px; /* Ajusta o espaçamento entre itens */
+        }
 
-nav ul li a {
-    color: #333;
-    text-decoration: none;
-    font-size: 1.2em;
-    font-weight: bold;
-    transition: color 0.3s;
-}
+        nav ul li a {
+            color: #333;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
 
-nav ul li a:hover {
-    color: #036cff;
-}
+        nav ul li a:hover {
+            color: #036cff;
+        }
 
-main {
-    padding: 50px 20px;
-}
+        main {
+            padding: 50px 20px;
+        }
 
-section {
-    margin-bottom: 50px;
-    padding: 20px;
-    background-color: #f7f7f7;
-    border-radius: 8px;
-    font-style: normal;
-}
+        section {
+            margin-bottom: 50px;
+            padding: 20px;
+            background-color: #f7f7f7;
+            border-radius: 8px;
+            font-style: normal;
+        }
 
-section h1, section h2 {
-    color: #036cff;
-    font-size: 2em;
-    margin-bottom: 20px;
-    border-bottom: 2px solid #036cff;
-    padding-bottom: 10px;
-}
+        section h1 {
+            color: #036cff;
+            font-size: 2em;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #036cff;
+            padding-bottom: 10px;
+        }
 
-section p {
-    font-size: 1.2em;
-    line-height: 1.6;
-}
+        section p {
+            font-size: 1.2em;
+            line-height: 1.6;
+        }
 
-.image-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    text-align: center;
-}
+        #image-container {
+            display: flex;
+            justify-content: center; /* Centraliza as imagens */
+            margin-top: 20px;
+        }
 
-.image-container img {
-    width: 100%;
-    max-width: 150px; /* Tamanho máximo da imagem */
-    height: auto;
-    border-radius: 8px;
-}
+        #image-container img {
+            width: 100%;
+            max-width: 150px; /* Tamanho máximo da imagem */
+            height: auto;
+            display: none; /* Inicialmente escondido */
+        }
 
-/* Estilos do footer */
-footer {
-    background-color: #fff;
-    border-top: 2px solid #ccc;
-    padding: 20px 0;
-    text-align: center;
-}
+        /* Imagens a serem exibidas em telas maiores */
+        @media (min-width: 769px) {
+            #image-container img {
+                display: block; /* Exibe as imagens em telas maiores */
+            }
+        }
 
-footer p {
-    margin: 0;
-    color: #333;
-    font-size: 0.9em;
-}
+        /* Esconde as imagens em dispositivos móveis */
+        @media (max-width: 768px) {
+            #image-container img {
+                display: none; /* Esconde as imagens em dispositivos móveis */
+            }
+        }
 
-/* Estilos do formulário */
-form {
-    display: flex;
-    flex-direction: column;
-}
+        footer {
+            background-color: #fff;
+            border-top: 2px solid #ccc;
+            padding: 20px 0;
+            text-align: center;
+        }
 
-form label {
-    margin-top: 10px;
-    color: #333;
-}
-
-form input, form textarea, form button {
-    padding: 10px;
-    margin-top: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #fff;
-    color: #333;
-}
-
-form button {
-    background-color: #036cff;
-    color: #fff;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-form button:hover {
-    background-color: #024acb;
-}
-
-/* Estilos adicionais */
-.foto-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-.foto-btn {
-    border: none;
-    background: none;
-    padding: 0;
-}
-
-.foto-btn img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 8px;
-    transition: transform 0.3s;
-}
-
-.foto-btn img:hover {
-    transform: scale(1.1);
-}
-
-img {
-    max-width: 100%; /* A imagem não excederá a largura do seu contêiner */
-    height: auto;    /* Mantém a proporção da imagem */
-}
-#image-container img {
-    width: 100%;      /* A imagem ocupa 100% da largura do contêiner */
-    max-width: 100%; /* Limita a largura máxima a 100% */
-    height: auto;    /* Mantém a proporção da imagem */
-}
-
-@media (max-width: 767px) {
-    #image-container img {
-        max-width: 50%; /* Ajusta a largura máxima para telas pequenas */
-    }
-}
-
-@media (min-width: 769px) {
-    #image-container img {
-        max-width: 150px; /* Define um tamanho fixo para telas maiores */
-    }
-}
+        footer p {
+            margin: 0;
+            color: #333;
+            font-size: 0.9em;
+        }

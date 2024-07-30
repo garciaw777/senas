@@ -156,3 +156,113 @@ form button:hover {
 .foto-btn img:hover {
     transform: scale(1.1);
 }
+        footer {
+            background-color: #fff;
+            border-top: 2px solid #ccc;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        footer p {
+            margin: 0;
+            color: #333;
+            font-size: 0.9em;
+        }
+        /* Reset básico e estilos gerais */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff;
+            color: #333;
+        }
+
+        header {
+            background-color: #fff;
+            border-bottom: 2px solid #ccc;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        .logo img {
+            max-width: 100%;
+            height: auto;
+            max-width: 200px; /* Limite máximo do tamanho do logo */
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0 0;
+            display: flex;
+            flex-direction: row; /* Direção da lista para linha */
+            justify-content: center; /* Centraliza os itens */
+            flex-wrap: wrap; /* Permite quebrar linha se necessário */
+        }
+
+        nav ul li {
+            margin: 5px 15px; /* Ajusta o espaçamento entre itens */
+        }
+
+        nav ul li a {
+            color: #333;
+            text-decoration: none;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #036cff;
+        }
+
+        main {
+            padding: 50px 20px;
+        }
+
+        section {
+            margin-bottom: 50px;
+            padding: 20px;
+            background-color: #f7f7f7;
+            border-radius: 8px;
+            font-style: normal;
+        }
+
+        section h1 {
+            color: #036cff;
+            font-size: 2em;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #036cff;
+            padding-bottom: 10px;
+        }
+
+        section p {
+            font-size: 1.2em;
+            line-height: 1.6;
+        }
+
+        /* Ajusta o layout dos links de navegação */
+        @media (min-width: 769px) {
+            nav ul {
+                flex-direction: row; /* Exibe os links lado a lado em telas grandes */
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column; /* Exibe os links em coluna em telas pequenas */
+            }
+        }
+
+        footer {
+            background-color: #fff;
+            border-top: 2px solid #ccc;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        footer p {
+            margin: 0;
+            color: #333;
+            font-size: 0.9em;
+        }

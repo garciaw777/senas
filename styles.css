@@ -168,9 +168,9 @@ img {
     height: auto;    /* Mantém a proporção da imagem */
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     #image-container img {
-        max-width: 80%; /* Ajusta a largura máxima para telas pequenas */
+        max-width: 50%; /* Ajusta a largura máxima para telas pequenas */
     }
 }
 

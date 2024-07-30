@@ -1,3 +1,4 @@
+/* Reset básico e estilos gerais */
 body {
     font-family: 'Arial', sans-serif;
     margin: 0;
@@ -14,7 +15,9 @@ header {
 }
 
 .logo img {
-    max-width: 200px;
+    max-width: 100%;
+    height: auto;
+    max-width: 200px; /* Limite máximo do tamanho do logo */
 }
 
 nav ul {
@@ -22,11 +25,12 @@ nav ul {
     padding: 0;
     margin: 10px 0 0;
     display: flex;
-    justify-content: center;
+    flex-direction: column; /* Muda a direção da lista para coluna em telas pequenas */
+    align-items: center; /* Centraliza os itens */
 }
 
 nav ul li {
-    margin: 0 15px;
+    margin: 5px 0; /* Ajusta o espaçamento entre itens */
 }
 
 nav ul li a {
@@ -59,7 +63,6 @@ section h1, section h2 {
     margin-bottom: 20px;
     border-bottom: 2px solid #036cff;
     padding-bottom: 10px;
-    font-style: normal;
 }
 
 section p {
@@ -73,21 +76,16 @@ section p {
     justify-content: center;
     gap: 10px;
     text-align: center;
-    width: 100px; /* Defina o tamanho desejado */
-    max-width: 100%;
-    height: auto;
 }
 
 .image-container img {
-    width: 150px;
+    width: 100%;
+    max-width: 150px; /* Tamanho máximo da imagem */
     height: auto;
     border-radius: 8px;
-    text-align: center;
-    width: 100px; /* Defina o tamanho desejado */
-    max-width: 100%;
-    height: auto;
 }
 
+/* Estilos do footer */
 footer {
     background-color: #fff;
     border-top: 2px solid #ccc;
@@ -101,6 +99,7 @@ footer p {
     font-size: 0.9em;
 }
 
+/* Estilos do formulário */
 form {
     display: flex;
     flex-direction: column;
@@ -131,7 +130,7 @@ form button:hover {
     background-color: #024acb;
 }
 
-/* Adicione esta seção ao seu arquivo styles.css */
+/* Estilos adicionais */
 .foto-container {
     display: flex;
     flex-wrap: wrap;
@@ -147,8 +146,8 @@ form button:hover {
 }
 
 .foto-btn img {
-    width: 100px; /* Ajuste o tamanho conforme necessário */
-    height: 100px; /* Ajuste o tamanho conforme necessário */
+    width: 100px;
+    height: 100px;
     object-fit: cover;
     border-radius: 8px;
     transition: transform 0.3s;
@@ -156,4 +155,49 @@ form button:hover {
 
 .foto-btn img:hover {
     transform: scale(1.1);
+}
+
+/* Regras de mídia para dispositivos móveis */
+@media (max-width: 768px) {
+    nav ul {
+        flex-direction: column;
+    }
+
+    .logo img {
+        max-width: 150px;
+    }
+
+    section h1 {
+        font-size: 1.5em;
+    }
+
+    section p {
+        font-size: 1em;
+    }
+
+    .image-container img {
+        max-width: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        font-size: 0.9em;
+    }
+
+    nav ul li a {
+        font-size: 1em;
+    }
+
+    section h1 {
+        font-size: 1.2em;
+    }
+
+    section p {
+        font-size: 0.9em;
+    }
+
+    .image-container img {
+        max-width: 80px;
+    }
 }

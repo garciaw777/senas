@@ -10,7 +10,7 @@
 <body>
     <header>
         <div class="logo">
-            <img src="logo.jpg">
+            <img src="logo.jpg" alt="Logo">
         </div>
         <nav>
             <ul>
@@ -23,19 +23,41 @@
     </header>
     <main>
         <section id="historia">
-
             <h1>História da Senas Mobile</h1>
-           <p>Fundada em 17 de junho de 2024, a Senas Mobile é uma empresa dedicada a criar jogos e aplicações que combinam diversão e aprendizado. Nossa missão é proporcionar experiências únicas e envolventes, estimulando a criatividade e o raciocínio lógico. Com uma equipe talentosa e apaixonada, desenvolvemos produtos de alta qualidade, sempre atentos às tendências e necessidades do mercado. Na Senas Mobile, acreditamos que a diversão e o aprendizado podem andar de mãos dadas, contribuindo para um mundo digital mais rico e significativo. Junte-se a nós e descubra um universo de possibilidades! </p>
+            <p>Fundada em 17 de junho de 2024, a Senas Mobile é uma empresa dedicada a criar jogos e aplicações que combinam diversão e aprendizado. Nossa missão é proporcionar experiências únicas e envolventes, estimulando a criatividade e o raciocínio lógico. Com uma equipe talentosa e apaixonada, desenvolvemos produtos de alta qualidade, sempre atentos às tendências e necessidades do mercado. Na Senas Mobile, acreditamos que a diversão e o aprendizado podem andar de mãos dadas, contribuindo para um mundo digital mais rico e significativo. Junte-se a nós e descubra um universo de possibilidades!</p>
         </section>
-           <div id="image-container">
-           <img src="rr.png" alt="Funcionarios(a)">
-           </div>
-
-        </section>
+        <div id="image-container">
+            <img id="img1" src="1.png" alt="Imagem 1">
+            <img id="img2" src="2.png" alt="Imagem 2">
+            <img id="img-rr" src="rr.png" alt="Imagem RR">
+        </div>
     </main>
     <footer>
         <p>&copy; 2024 Senas Mobile. Todos os direitos reservados.</p>
     </footer>
+    <script>
+        function updateImages() {
+            const width = window.innerWidth;
+            const img1 = document.getElementById('img1');
+            const img2 = document.getElementById('img2');
+            const imgRR = document.getElementById('img-rr');
+
+            if (width <= 768) {
+                // Em dispositivos móveis, mostra rr.png e esconde 1.png e 2.png
+                img1.style.display = 'none';
+                img2.style.display = 'none';
+                imgRR.style.display = 'block';
+            } else {
+                // Em telas maiores, mostra 1.png e 2.png e esconde rr.png
+                img1.style.display = 'block';
+                img2.style.display = 'block';
+                imgRR.style.display = 'none';
+            }
+        }
+
+        // Atualiza as imagens ao carregar a página e quando a janela é redimensionada
+        window.addEventListener('load', updateImages);
+        window.addEventListener('resize', updateImages);
+    </script>
 </body>
 </html>
-<!--PODETENTAR-->

@@ -158,27 +158,24 @@ form button:hover {
     transform: scale(1.1);
 }
 
-/* Media Queries para ajuste responsivo */
+img {
+    max-width: 100%; /* A imagem não excederá a largura do seu contêiner */
+    height: auto;    /* Mantém a proporção da imagem */
+}
+#image-container img {
+    width: 100%;      /* A imagem ocupa 100% da largura do contêiner */
+    max-width: 100%; /* Limita a largura máxima a 100% */
+    height: auto;    /* Mantém a proporção da imagem */
+}
+
 @media (max-width: 768px) {
-    nav ul {
-        flex-direction: row; /* Mantém a direção da lista como linha em telas pequenas */
-        flex-wrap: wrap; /* Permite quebrar linha se necessário */
-        justify-content: center; /* Centraliza os itens */
-    }
-
-    .image-container {
-        flex-direction: row; /* Mantém a direção das imagens como linha em telas pequenas */
-        justify-content: center; /* Centraliza as imagens */
-    }
-
-    .image-container img {
-        max-width: 100%; /* Ajusta a largura máxima para a imagem ocupar 100% em telas pequenas */
+    #image-container img {
+        max-width: 80%; /* Ajusta a largura máxima para telas pequenas */
     }
 }
 
 @media (min-width: 769px) {
-    .image-container img {
-        max-width: 45%; /* Ajusta a largura máxima para 2 imagens lado a lado em telas maiores */
+    #image-container img {
+        max-width: 150px; /* Define um tamanho fixo para telas maiores */
     }
 }
-s
